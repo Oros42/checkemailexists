@@ -7,23 +7,37 @@
 
 if [ ! `which expect` ]; then
 	echo -e "\033[31mNeed expect!\033[0m\nsudo apt install expect"
+	exit 1
 fi
 if [ ! `which nslookup` ]; then
-	echo -e "\033[31mNeed nslookup!\033[0m\nsudo apt install nslookup"
+	echo -e "\033[31mNeed nslookup!\033[0m\nsudo apt install dnsutils"
+	exit 1
+fi
+if [ ! `which telnet` ]; then
+	echo -e "\033[31mNeed telnet!\033[0m\nsudo apt install telnet"
+	exit 1
 fi
 
 if [ $# -ne 1 ]; then
 	echo "$0 <mail_to_check>"
-	exit
+	exit 1
 fi
 themail="$1"
 domain=${themail##*@}
 mailHost=`nslookup -type=mx $domain |grep exchanger | head -n 1`
+if [ "$mailHost" == "" ]; then
+	echo -e "\033[31mNo email server at this domain : $domain\033[0m"
+	exit 1
+fi
 mailHost=${mailHost##* }
+if [ "$mailHost" == "" ]; then
+	echo -e "\033[31mError 1 with the domain\033[0m"
+	exit 1
+fi
 mailHost=${mailHost::-1}
 if [ "$mailHost" == "" ]; then
-	echo "Error: Empty mailHost"
-	exit
+	echo -e "\033[31mError 2 with the domain\033[0m"
+	exit 1
 fi
 
 a=$(
