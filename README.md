@@ -1,2 +1,2 @@
-# checkemailexist
-Check if an email address exist
+# checkemailexists
+Check if an email address exists
