@@ -94,7 +94,7 @@ proc connect {} {
 			}
 		}
 	}
-	return 4
+	return 5
 }
 spawn telnet '$mailHost' 25
 sleep 0.5
@@ -110,11 +110,17 @@ case $ex in
 		exit 0;;
 	2) 
 		echo "mailbox unavailable"
-		exit 1;;
+		exit 2;;
 	3)
 		echo "Protocol error. Try it again"
-		exit 2;;
+		exit 3;;
+	4)
+		echo "Oups Invalid Address for sender"
+		exit 4;;
+	5)
+		echo "Error 0_o. Not 220 when connect to $mailHost"
+		exit 5;;
 	*)
 		echo "Error 0_o ($ex)"
-		exit 3;;
+		exit 6;;
 esac
